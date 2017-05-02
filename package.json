@@ -1,0 +1,29 @@
+{
+  "name": "react-card-table",
+  "version": "0.0.0",
+  "description": "A react table component that collapses into a deck of cards when the table no longer fits on the screen",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blueqaus/react-card-table.git"
+  },
+  "keywords": [
+    "react",
+    "table",
+    "javascript",
+    "es6",
+    "eslint",
+    "babel",
+    "scss",
+    "webpack2"
+  ],
+  "author": "Rhys Gevaux (rhys.gevaux@blueq.com.au)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/blueqaus/react-card-table/issues"
+  },
+  "homepage": "https://github.com/blueqaus/react-card-table#readme"
+}
