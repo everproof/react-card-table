@@ -5,10 +5,9 @@
   border-collapse: separate;
 
   > thead {
-    @extend %header;
-
     > tr {
       > th {
+        @extend %header;
         border-top: $border;
         border-bottom: $border;
 
@@ -50,13 +49,8 @@
     @extend %row;
     border-left: $border;
 
-    &:first-of-type {
-      padding-left: 25px;
-    }
-
     &:last-of-type {
       border-right: $border;
-      padding-right: 25px;
     }
   }
 }

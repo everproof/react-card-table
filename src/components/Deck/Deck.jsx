@@ -3,13 +3,21 @@ import React from 'react'
 
 import { card, cell, deck, label, values } from './styles'
 
+const defaultClassNames = {
+  cardClass: card,
+  cardLabelClass: label,
+  cardValueClass: cell,
+  cardValuesClass: values,
+  deckClass: deck,
+}
+
 export default function Deck ({
   classNames: {
-    cardClass,
-    cardLabelClass,
-    cardValueClass,
-    cardValuesClass,
-    deckClass,
+    cardClass = defaultClassNames.cardClass,
+    cardLabelClass = defaultClassNames.cardLabelClass,
+    cardValueClass = defaultClassNames.cardValueClass,
+    cardValuesClass = defaultClassNames.cardValuesClass,
+    deckClass = defaultClassNames.deckClass,
   },
   headers,
   rows,
@@ -33,13 +41,7 @@ export default function Deck ({
 }
 
 Deck.defaultProps = {
-  classNames: shape({
-    cardClass: card,
-    cardLabelClass: label,
-    cardValueClass: cell,
-    cardValuesClass: values,
-    deckClass: deck,
-  }),
+  classNames: defaultClassNames,
 }
 
 Deck.displayName = 'Deck'
