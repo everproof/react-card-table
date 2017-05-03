@@ -1,6 +1,6 @@
 @import '../styles';
 
-.card-container {
+.card {
   display: flex;
   flex-direction: row;
   border-bottom: $border;
@@ -20,7 +20,7 @@
   text-overflow: ellipsis;
 }
 
-.deck-container {
+.deck {
   @extend %container;
   border: $border;
   border-radius: $border-radius;

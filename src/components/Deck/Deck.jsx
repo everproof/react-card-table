@@ -1,14 +1,16 @@
 import { arrayOf, func, shape, string } from 'prop-types'
 import React from 'react'
 
-import { cardContainer, cell, deckContainer, label, values } from './styles'
+import { card, cell, deck, label, values } from './styles'
 
 export default function Deck ({
-  cardClass,
-  cardLabelClass,
-  cardValueClass,
-  cardValuesCless,
-  deckClass,
+  classNames: {
+    cardClass,
+    cardLabelClass,
+    cardValueClass,
+    cardValuesClass,
+    deckClass,
+  },
   headers,
   rows,
 }) {
@@ -20,7 +22,7 @@ export default function Deck ({
             {headers.map(({ key, title }) =>
               <div className={cardLabelClass} key={key}>{title}</div>)}
           </div>
-          <div className={cardValuesCless}>
+          <div className={cardValuesClass}>
             {Object.entries(data).map(([key, value]) =>
               <div className={cardValueClass} key={key + value}>{value}</div>)}
           </div>
@@ -31,21 +33,25 @@ export default function Deck ({
 }
 
 Deck.defaultProps = {
-  cardClass: cardContainer,
-  cardLabelClass: label,
-  cardValueClass: cell,
-  cardValuesCless: values,
-  deckClass: deckContainer,
+  classNames: shape({
+    cardClass: card,
+    cardLabelClass: label,
+    cardValueClass: cell,
+    cardValuesClass: values,
+    deckClass: deck,
+  }),
 }
 
 Deck.displayName = 'Deck'
 
 Deck.propTypes = {
-  cardClass: string,
-  cardLabelClass: string,
-  cardValueClass: string,
-  cardValuesCless: string,
-  deckClass: string,
+  classNames: shape({
+    cardClass: string,
+    cardLabelClass: string,
+    cardValueClass: string,
+    cardValuesClass: string,
+    deckClass: string,
+  }),
   headers: arrayOf(shape({
     key: string.isRequired,
     title: string.isRequired,

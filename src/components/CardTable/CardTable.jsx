@@ -15,9 +15,12 @@ export default class CardTable extends Component {
 
   static propTypes = {
     classNames: shape({
-      card: string,
-      deck: string,
-      table: string,
+      cardClass: string,
+      cardLabelClass: string,
+      cardValueClass: string,
+      cardValuesClass: string,
+      deckClass: string,
+      tableClass: string,
     }),
     headers: arrayOf(shape({
       key: string.isRequired,
@@ -58,6 +61,13 @@ export default class CardTable extends Component {
     })
   }
 
+  hiddenStyle = {
+    opacity: 0,
+    width: '1px',
+    height: '1px',
+    overflow: 'hidden',
+  }
+
   handleWindowResize = () => {
     const parentWidth = getElementContentWidth(this.containerNode.parentNode)
 
@@ -73,13 +83,6 @@ export default class CardTable extends Component {
       tableIsTooWide: this.tableNode.clientWidth > parentWidth,
     }, resolve)
   })
-
-  hiddenStyle = {
-    opacity: 0,
-    width: '1px',
-    height: '1px',
-    overflow: 'hidden',
-  }
 
   updateRef = ({ containerNodeRef, tableNodeRef }) => {
     this.containerNode = containerNodeRef
@@ -97,8 +100,7 @@ export default class CardTable extends Component {
         {this.state.tableIsTooWide
           ? (
             <Deck
-              cardClass={this.props.classNames.card}
-              deckClass={this.props.classNames.deck}
+              classNames={this.props.classNames}
               headers={this.props.headers}
               rows={this.props.rows}
             />
@@ -108,7 +110,7 @@ export default class CardTable extends Component {
           <Table
             headers={this.props.headers}
             rows={this.props.rows}
-            tableClass={this.props.classNames.table}
+            tableClass={this.props.classNames.tableClass}
             tableNode={(ref) => {
               this.tableNode = ref
             }}
