@@ -84,11 +84,6 @@ export default class CardTable extends Component {
     }, resolve)
   })
 
-  updateRef = ({ containerNodeRef, tableNodeRef }) => {
-    this.containerNode = containerNodeRef
-    this.tableNode = tableNodeRef
-  }
-
   render () {
     return (
       <div
