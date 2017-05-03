@@ -1,0 +1,36 @@
+@import '../styles';
+
+.card-container {
+  display: flex;
+  flex-direction: row;
+  border-bottom: $border;
+
+  &:nth-of-type(even) {
+    background-color: $grey-light;
+  }
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+}
+
+.cell {
+  @extend %row;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deck-container {
+  @extend %container;
+  border: $border;
+  border-radius: $border-radius;
+}
+
+.label {
+  @extend %header;
+  @extend %row;
+}
+
+.values {
+  overflow: hidden;
+}

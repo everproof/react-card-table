@@ -1,0 +1,62 @@
+@import '../styles';
+
+.table-container {
+  @extend %container;
+  border-collapse: separate;
+
+  > thead {
+    @extend %header;
+
+    > tr {
+      > th {
+        border-top: $border;
+        border-bottom: $border;
+
+        &:first-of-type {
+          border-top-left-radius: $border-radius;
+        }
+
+        &:last-of-type {
+          border-top-right-radius: $border-radius;
+        }
+      }
+    }
+  }
+
+  > tbody {
+    > tr {
+      &:nth-of-type(odd) {
+        background-color: $grey-light;
+      }
+
+      &:last-of-type {
+        > td {
+          border-bottom: $border;
+
+          &:first-of-type {
+            border-bottom-left-radius: $border-radius;
+          }
+
+          &:last-of-type {
+            border-bottom-right-radius: $border-radius;
+          }
+        }
+      }
+    }
+  }
+
+  td,
+  th {
+    @extend %row;
+    border-left: $border;
+
+    &:first-of-type {
+      padding-left: 25px;
+    }
+
+    &:last-of-type {
+      border-right: $border;
+      padding-right: 25px;
+    }
+  }
+}

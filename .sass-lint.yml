@@ -1,0 +1,19 @@
+rules:
+  mixins-before-declarations:
+    - 1
+    -
+      exclude: ['composes']
+  nesting-depth:
+    - 1
+    -
+      max-depth: 4
+  no-misspelled-properties:
+    - 1
+    -
+      extra-properties:
+        - composes
+  property-sort-order:
+  - 1
+  -
+    order: concentric
+    ignore-custom-properties: true

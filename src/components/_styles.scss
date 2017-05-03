@@ -1,0 +1,20 @@
+$border: 1px solid #000;
+$border-radius: 3px;
+
+$background: #fff;
+$grey-light: #ddd;
+
+%container {
+  background-color: $background;
+  width: 100%;
+  text-align: left;
+}
+
+%header {
+  font-weight: 500;
+}
+
+%row {
+  padding: 8px;
+  white-space: nowrap;
+}

@@ -2,7 +2,7 @@
   "name": "react-card-table",
   "version": "0.0.0",
   "description": "A react table component that collapses into a deck of cards when the table no longer fits on the screen",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "webpack",
     "lint:es": "eslint src/. --ext=js --ext=jsx; exit 0",
@@ -34,11 +34,17 @@
     "url": "https://github.com/blueqaus/react-card-table/issues"
   },
   "homepage": "https://github.com/blueqaus/react-card-table#readme",
+  "dependencies": {
+    "babel-runtime": "^6.23.0",
+    "prop-types": "^15.5.8",
+    "react": "^15.5.4"
+  },
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.0.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.4.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
