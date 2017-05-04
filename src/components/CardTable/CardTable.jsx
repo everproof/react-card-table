@@ -39,7 +39,12 @@ export default class CardTable extends Component {
   }
 
   componentDidMount () {
-    window.onload = this.onWindowLoad
+    if (document.readyState === 'complete') {
+      this.onWindowLoad()
+    } else {
+      window.addEventListener('load', this.onWindowLoad)
+    }
+
     window.addEventListener(RESIZE_EVENT_NAME, this.handleWindowResize)
   }
 
