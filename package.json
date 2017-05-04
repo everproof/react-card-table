@@ -36,6 +36,7 @@
   "homepage": "https://github.com/blueqaus/react-card-table#readme",
   "dependencies": {
     "babel-runtime": "^6.23.0",
+    "lodash": "^4.17.4",
     "prop-types": "^15.5.8",
     "react": "^15.5.4"
   },
