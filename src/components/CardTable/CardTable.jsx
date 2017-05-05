@@ -1,6 +1,6 @@
 import { chunk } from 'lodash'
-import { arrayOf, func, number, shape, string } from 'prop-types'
-import React, { Component } from 'react'
+import { arrayOf, func, node, number, shape, string } from 'prop-types'
+import React, { cloneElement, Component } from 'react'
 
 import { Deck, Table } from 'components'
 import getElementContentWidth from 'utils/getElementContentWidth'
@@ -19,6 +19,7 @@ export default class CardTable extends Component {
   static displayName = 'CardTable'
 
   static propTypes = {
+    backButton: node.isRequired,
     cardsPerDeck: number,
     classNames: shape({
       cardClass: string,
@@ -32,6 +33,7 @@ export default class CardTable extends Component {
       key: string.isRequired,
       title: string.isRequired,
     })).isRequired,
+    nextButton: node.isRequired,
     rows: arrayOf(shape({
       data: shape().isRequired,
       id: string.isRequired,
@@ -90,12 +92,9 @@ export default class CardTable extends Component {
       <div>
         <Deck classNames={classNames} headers={headers} rows={deckRows} />
         <div className={navigation}>
-          <button disabled={prevIndex < minIndex} onClick={this.prevPage(cardsPerDeck)}>
-            {'Prev'}
-          </button>
-          <button disabled={nextIndex >= decks.length} onClick={this.nextPage(cardsPerDeck)}>
-            {'Next'}
-          </button>
+          {this.backButton(prevIndex < minIndex, this.prevPage(cardsPerDeck))}
+          <div>{`${nextIndex}/${decks.length}`}</div>
+          {this.nextButton(nextIndex >= decks.length, this.nextPage(cardsPerDeck))}
         </div>
       </div>
     )
@@ -140,21 +139,27 @@ export default class CardTable extends Component {
           </div>
         ))}
         <div className={navigation}>
-          <button disabled={prevIndex < minIndex} onClick={this.prevPage(rowsPerTable)}>
-            {'Prev'}
-          </button>
-          <button disabled={nextIndex >= tables.length} onClick={this.nextPage(rowsPerTable)}>
-            {'Next'}
-          </button>
+          {this.backButton(prevIndex < minIndex, this.prevPage(rowsPerTable))}
+          <div>{`${nextIndex}/${tables.length}`}</div>
+          {this.nextButton(nextIndex >= tables.length, this.nextPage(rowsPerTable))}
         </div>
       </div>
     )
   }
 
+  backButton = (disabled, onClick) => cloneElement(
+    this.props.backButton,
+    {
+      disabled,
+      onClick,
+    })
+
   handleWindowResize = () => new Promise((resolve) => {
-    this.setState({
-      tableIsTooWide: this.tableIsTooWide,
-    }, resolve)
+    this.setState(
+      {
+        tableIsTooWide: this.tableIsTooWide,
+      },
+      resolve)
   })
 
   itemsProperties = (itemsPerContainer) => {
@@ -186,6 +191,13 @@ export default class CardTable extends Component {
       viewingIndex: Math.floor(index / absoluteChange) * absoluteChange,
     })
   }
+
+  nextButton = (disabled, onClick) => cloneElement(
+    this.props.nextButton,
+    {
+      disabled,
+      onClick,
+    })
 
   nextPage = increment => (event) => {
     this.navigate(event, increment)
