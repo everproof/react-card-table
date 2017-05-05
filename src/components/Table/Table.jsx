@@ -23,6 +23,7 @@ export default function Table ({ headers, id, rows, tableClass, tableNode }) {
 }
 
 Table.defaultProps = {
+  style: null,
   tableClass: tableContainer,
 }
 

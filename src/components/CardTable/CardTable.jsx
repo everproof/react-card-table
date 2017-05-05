@@ -5,6 +5,8 @@ import React, { Component } from 'react'
 import { Deck, Table } from 'components'
 import getElementContentWidth from 'utils/getElementContentWidth'
 
+import { navigation } from './styles'
+
 const RESIZE_EVENT_NAME = 'resize'
 
 export default class CardTable extends Component {
@@ -41,6 +43,7 @@ export default class CardTable extends Component {
   state = {
     shouldRender: false,
     tableIsTooWide: false,
+    viewingIndex: 0,
   }
 
   componentDidMount () {
@@ -51,12 +54,6 @@ export default class CardTable extends Component {
     }
 
     window.addEventListener(RESIZE_EVENT_NAME, this.handleWindowResize)
-  }
-
-  shouldComponentUpdate (nextProps, { shouldRender, tableIsTooWide }) {
-    return this.state.shouldRender !== shouldRender
-      || this.state.tableIsTooWide !== tableIsTooWide
-      || this.props !== nextProps
   }
 
   componentWillUnmount () {
@@ -78,34 +75,32 @@ export default class CardTable extends Component {
     overflow: 'hidden',
   }
 
-  get decks () {
+  get deck () {
+    const MIN_INDEX = 0
+    const INCREMENT = 1
+
     const { cardsPerDeck, classNames, headers, rows } = this.props
+
+    const deckIndex = Math.floor(this.state.viewingIndex / cardsPerDeck)
+    const nextIndex = deckIndex + INCREMENT
+    const prevIndex = deckIndex - INCREMENT
+
     const decks = cardsPerDeck ? chunk(rows, cardsPerDeck) : [rows]
+    const deckRows = decks[deckIndex]
 
-    return decks.map((deckRows, index) => (
-      <Deck
-        classNames={classNames}
-        headers={headers}
-        key={index}
-        rows={deckRows}
-      />
-    ))
-  }
-
-  get tables () {
-    const { classNames: { tableClass }, headers, rows, rowsPerTable } = this.props
-    const tables = rowsPerTable ? chunk(rows, rowsPerTable) : [rows]
-
-    return tables.map((tableRows, index) => (
-      <Table
-        headers={headers}
-        id={index}
-        key={index}
-        rows={tableRows}
-        tableClass={tableClass}
-        tableNode={this.updateTableNodeRef}
-      />
-    ))
+    return (
+      <div>
+        <Deck classNames={classNames} headers={headers} rows={deckRows} />
+        <div className={navigation}>
+          <button disabled={prevIndex < MIN_INDEX} onClick={this.prevPage(cardsPerDeck)}>
+            {'Prev'}
+          </button>
+          <button disabled={nextIndex >= decks.length} onClick={this.nextPage(cardsPerDeck)}>
+            {'Next'}
+          </button>
+        </div>
+      </div>
+    )
   }
 
   get largestTableWidth () {
@@ -123,6 +118,43 @@ export default class CardTable extends Component {
     return this.largestTableWidth > this.parentWidth
   }
 
+  get tables () {
+    const MIN_INDEX = 0
+    const INCREMENT = 1
+
+    const { classNames: { tableClass }, headers, rows, rowsPerTable } = this.props
+
+    const tableIndex = Math.floor(this.state.viewingIndex / rowsPerTable)
+    const nextIndex = tableIndex + INCREMENT
+    const prevIndex = tableIndex - INCREMENT
+
+    const tables = rowsPerTable ? chunk(rows, rowsPerTable) : [rows]
+
+    return (
+      <div>
+        {tables.map((tableRows, index) => (
+          <div key={index} style={index === tableIndex ? null : this.hiddenStyle}>
+            <Table
+              headers={headers}
+              id={index}
+              rows={tableRows}
+              tableClass={tableClass}
+              tableNode={this.updateTableNodeRef}
+            />
+          </div>
+        ))}
+        <div className={navigation}>
+          <button disabled={prevIndex < MIN_INDEX} onClick={this.prevPage(rowsPerTable)}>
+            {'Prev'}
+          </button>
+          <button disabled={nextIndex >= tables.length} onClick={this.nextPage(rowsPerTable)}>
+            {'Next'}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   handleWindowResize = () => {
     this.setState({
       tableIsTooWide: this.tableIsTooWide,
@@ -134,6 +166,24 @@ export default class CardTable extends Component {
       tableIsTooWide: this.tableIsTooWide,
     }, resolve)
   })
+
+  nextPage = increment => (event) => {
+    event.stopPropagation()
+    const index = this.state.viewingIndex + increment
+
+    this.setState({
+      viewingIndex: Math.floor(index / increment) * increment,
+    })
+  }
+
+  prevPage = decrement => (event) => {
+    event.stopPropagation()
+    const index = this.state.viewingIndex - decrement
+
+    this.setState({
+      viewingIndex: Math.floor(index / decrement) * decrement,
+    })
+  }
 
   updateTableNodeRef = (ref) => {
     this.tableNodes = {
@@ -150,7 +200,7 @@ export default class CardTable extends Component {
         }}
         style={this.state.shouldRender ? null : this.hiddenStyle}
       >
-        {this.state.tableIsTooWide ? this.decks : null}
+        {this.state.tableIsTooWide ? this.deck : null}
         <div style={this.state.tableIsTooWide ? this.hiddenStyle : null}>
           {this.tables}
         </div>
