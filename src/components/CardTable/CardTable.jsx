@@ -1,4 +1,4 @@
-import { chunk } from 'lodash'
+import chunk from 'lodash/chunk'
 import { arrayOf, func, node, number, shape, string } from 'prop-types'
 import React, { cloneElement, Component } from 'react'
 
