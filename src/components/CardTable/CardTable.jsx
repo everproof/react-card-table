@@ -61,7 +61,7 @@ export default class CardTable extends Component {
   }
 
   onWindowLoad = () => {
-    this.handleWindowResizeAsync().then(() => {
+    this.handleWindowResize().then(() => {
       this.setState({
         shouldRender: true,
       })
@@ -76,23 +76,21 @@ export default class CardTable extends Component {
   }
 
   get deck () {
-    const MIN_INDEX = 0
-    const INCREMENT = 1
-
-    const { cardsPerDeck, classNames, headers, rows } = this.props
-
-    const deckIndex = Math.floor(this.state.viewingIndex / cardsPerDeck)
-    const nextIndex = deckIndex + INCREMENT
-    const prevIndex = deckIndex - INCREMENT
-
-    const decks = cardsPerDeck ? chunk(rows, cardsPerDeck) : [rows]
+    const { cardsPerDeck, classNames, headers } = this.props
+    const {
+      items: decks,
+      itemIndex: deckIndex,
+      minIndex,
+      nextIndex,
+      prevIndex,
+    } = this.itemsProperties(cardsPerDeck)
     const deckRows = decks[deckIndex]
 
     return (
       <div>
         <Deck classNames={classNames} headers={headers} rows={deckRows} />
         <div className={navigation}>
-          <button disabled={prevIndex < MIN_INDEX} onClick={this.prevPage(cardsPerDeck)}>
+          <button disabled={prevIndex < minIndex} onClick={this.prevPage(cardsPerDeck)}>
             {'Prev'}
           </button>
           <button disabled={nextIndex >= decks.length} onClick={this.nextPage(cardsPerDeck)}>
@@ -119,16 +117,14 @@ export default class CardTable extends Component {
   }
 
   get tables () {
-    const MIN_INDEX = 0
-    const INCREMENT = 1
-
-    const { classNames: { tableClass }, headers, rows, rowsPerTable } = this.props
-
-    const tableIndex = Math.floor(this.state.viewingIndex / rowsPerTable)
-    const nextIndex = tableIndex + INCREMENT
-    const prevIndex = tableIndex - INCREMENT
-
-    const tables = rowsPerTable ? chunk(rows, rowsPerTable) : [rows]
+    const { classNames: { tableClass }, headers, rowsPerTable } = this.props
+    const {
+      items: tables,
+      itemIndex: tableIndex,
+      minIndex,
+      nextIndex,
+      prevIndex,
+    } = this.itemsProperties(rowsPerTable)
 
     return (
       <div>
@@ -144,7 +140,7 @@ export default class CardTable extends Component {
           </div>
         ))}
         <div className={navigation}>
-          <button disabled={prevIndex < MIN_INDEX} onClick={this.prevPage(rowsPerTable)}>
+          <button disabled={prevIndex < minIndex} onClick={this.prevPage(rowsPerTable)}>
             {'Prev'}
           </button>
           <button disabled={nextIndex >= tables.length} onClick={this.nextPage(rowsPerTable)}>
@@ -155,34 +151,50 @@ export default class CardTable extends Component {
     )
   }
 
-  handleWindowResize = () => {
-    this.setState({
-      tableIsTooWide: this.tableIsTooWide,
-    })
-  }
-
-  handleWindowResizeAsync = () => new Promise((resolve) => {
+  handleWindowResize = () => new Promise((resolve) => {
     this.setState({
       tableIsTooWide: this.tableIsTooWide,
     }, resolve)
   })
 
-  nextPage = increment => (event) => {
+  itemsProperties = (itemsPerContainer) => {
+    const MIN_INDEX = 0
+    const INCREMENT = 1
+
+    const { rows } = this.props
+    const itemIndex = Math.floor(this.state.viewingIndex / itemsPerContainer)
+    const nextIndex = itemIndex + INCREMENT
+    const prevIndex = itemIndex - INCREMENT
+
+    const items = itemsPerContainer ? chunk(rows, itemsPerContainer) : [rows]
+
+    return {
+      items,
+      itemIndex,
+      minIndex: MIN_INDEX,
+      nextIndex,
+      prevIndex,
+    }
+  }
+
+  navigate = (event, change) => {
     event.stopPropagation()
-    const index = this.state.viewingIndex + increment
+    const index = this.state.viewingIndex + change
+    const absoluteChange = Math.abs(change)
 
     this.setState({
-      viewingIndex: Math.floor(index / increment) * increment,
+      viewingIndex: Math.floor(index / absoluteChange) * absoluteChange,
     })
   }
 
-  prevPage = decrement => (event) => {
-    event.stopPropagation()
-    const index = this.state.viewingIndex - decrement
+  nextPage = increment => (event) => {
+    this.navigate(event, increment)
+  }
 
-    this.setState({
-      viewingIndex: Math.floor(index / decrement) * decrement,
-    })
+  prevPage = decrement => (event) => {
+    const NEGATIVE_ONE = -1
+
+    this.navigate(event, decrement * NEGATIVE_ONE)
   }
 
   updateTableNodeRef = (ref) => {
