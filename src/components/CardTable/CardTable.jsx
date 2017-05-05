@@ -71,10 +71,18 @@ export default class CardTable extends Component {
   }
 
   hiddenStyle = {
+    float: 'left',
     opacity: 0,
+    margin: 0,
+    'margin-right': '-1px',
+    border: 0,
+    'background-color': 'transparent',
+    padding: 0,
     width: '1px',
     height: '1px',
     overflow: 'hidden',
+    color: 'transparent',
+    clip: 'rect(0 0 0 0)',
   }
 
   get deck () {
