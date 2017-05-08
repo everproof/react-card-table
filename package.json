@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "description": "A react table component that collapses into a deck of cards when the table no longer fits on the screen",
   "main": "dist/index.js",
+  "module": "es6/index.js",
   "scripts": {
     "build": "webpack",
     "lint:es": "eslint src/. --ext=js --ext=jsx; exit 0",
@@ -11,7 +12,7 @@
     "lint": "npm run lint:es; npm run lint:sass",
     "lint:fix": "npm run lint:es:fix; npm run lint:sass",
     "prepublish": "npm run production",
-    "production": "webpack -p"
+    "production": "webpack -p; BABEL_ENV=es6 babel ./src --out-dir ./es --copy-files"
   },
   "repository": {
     "type": "git",
@@ -42,9 +43,11 @@
   },
   "devDependencies": {
     "autoprefixer": "^6.7.7",
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.0.0",
+    "babel-plugin-module-resolver": "^2.7.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.4.0",
     "babel-preset-react": "^6.24.1",

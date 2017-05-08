@@ -13,5 +13,26 @@
     }],
     "react",
     "stage-0"
-  ]
+  ],
+
+  "env": {
+    "es6": {
+      "presets": [
+        ["env", {
+            "loose": true,
+            "modules": false
+          }],
+        "stage-1",
+        "react"],
+      "plugins": [
+        "transform-runtime",
+        ["module-resolver", {
+            "root": [
+              "./src"
+            ]
+          }
+        ]
+      ]
+    }
+  }
 }
