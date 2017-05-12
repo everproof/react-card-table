@@ -109,14 +109,16 @@ export default class CardTable extends Component {
   }
 
   get largestTableWidth () {
-    const tableNodes = Object.values(this.tableNodes)
+    const tableNodes = Object.values(this.tableNodes || {})
     const tableWidths = tableNodes.map(tableNode => tableNode.clientWidth)
 
     return Math.max(...tableWidths)
   }
 
   get parentWidth () {
-    return getElementContentWidth(this.containerNode.parentNode)
+    const ZERO = 0
+
+    return this.containerNode ? getElementContentWidth(this.containerNode.parentNode) : ZERO
   }
 
   get tableIsTooWide () {
@@ -218,9 +220,11 @@ export default class CardTable extends Component {
   }
 
   updateTableNodeRef = (ref) => {
-    this.tableNodes = {
-      ...this.tableNodes,
-      [ref.id]: ref,
+    if (ref) {
+      this.tableNodes = {
+        ...this.tableNodes,
+        [ref.id]: ref,
+      }
     }
   }
 
