@@ -13,6 +13,7 @@ export default class CardTable extends Component {
   static defaultProps = {
     cardsPerDeck: null,
     classNames: {},
+    rows: [],
     rowsPerTable: null,
   }
 
@@ -85,40 +86,46 @@ export default class CardTable extends Component {
     clip: 'rect(0 0 0 0)',
   }
 
+  tableNodes = {}
+
   get deck () {
-    const { cardsPerDeck, classNames, headers } = this.props
+    const { cardsPerDeck, classNames, headers, rows } = this.props
     const {
       items: decks,
       itemIndex: deckIndex,
       minIndex,
       nextIndex,
       prevIndex,
-    } = this.itemsProperties(cardsPerDeck)
+    } = this.itemsProperties(cardsPerDeck || rows.length)
     const deckRows = decks[deckIndex]
 
     return (
       <div>
         <Deck classNames={classNames} headers={headers} rows={deckRows} />
         <div className={navigation}>
-          {this.backButton(prevIndex < minIndex, this.prevPage(cardsPerDeck))}
+          {this.backButton(prevIndex < minIndex, this.prevPage(cardsPerDeck || rows.length))}
           <div>{`${nextIndex}/${decks.length}`}</div>
-          {this.nextButton(nextIndex >= decks.length, this.nextPage(cardsPerDeck))}
+          {this.nextButton(nextIndex >= decks.length, this.nextPage(cardsPerDeck || rows.length))}
         </div>
       </div>
     )
   }
 
   get largestTableWidth () {
-    const tableNodes = Object.values(this.tableNodes || {})
+    const tableNodes = Object.values(this.tableNodes)
     const tableWidths = tableNodes.map(tableNode => tableNode.clientWidth)
 
     return Math.max(...tableWidths)
   }
 
   get parentWidth () {
-    const ZERO = 0
+    if (this.containerNode === null) {
+      const ZERO = 0
 
-    return this.containerNode ? getElementContentWidth(this.containerNode.parentNode) : ZERO
+      return ZERO
+    }
+
+    return getElementContentWidth(this.containerNode.parentNode)
   }
 
   get tableIsTooWide () {
@@ -126,14 +133,14 @@ export default class CardTable extends Component {
   }
 
   get tables () {
-    const { classNames: { tableClass }, headers, rowsPerTable } = this.props
+    const { classNames: { tableClass }, headers, rowsPerTable, rows } = this.props
     const {
       items: tables,
       itemIndex: tableIndex,
       minIndex,
       nextIndex,
       prevIndex,
-    } = this.itemsProperties(rowsPerTable)
+    } = this.itemsProperties(rowsPerTable || rows.length)
 
     return (
       <div>
@@ -149,9 +156,9 @@ export default class CardTable extends Component {
           </div>
         ))}
         <div className={navigation}>
-          {this.backButton(prevIndex < minIndex, this.prevPage(rowsPerTable))}
+          {this.backButton(prevIndex < minIndex, this.prevPage(rowsPerTable || rows.length))}
           <div>{`${nextIndex}/${tables.length}`}</div>
-          {this.nextButton(nextIndex >= tables.length, this.nextPage(rowsPerTable))}
+          {this.nextButton(nextIndex >= tables.length, this.nextPage(rowsPerTable || rows.length))}
         </div>
       </div>
     )
