@@ -13,6 +13,7 @@ export default class CardTable extends Component {
   static defaultProps = {
     cardsPerDeck: null,
     classNames: {},
+    rows: [],
     rowsPerTable: null,
   }
 
@@ -49,6 +50,7 @@ export default class CardTable extends Component {
   }
 
   componentDidMount () {
+    this.mounted = true
     if (document.readyState === 'complete') {
       this.onWindowLoad()
     } else {
@@ -59,6 +61,7 @@ export default class CardTable extends Component {
   }
 
   componentWillUnmount () {
+    this.mounted = false
     window.removeEventListener(RESIZE_EVENT_NAME, this.handleWindowResize)
   }
 
@@ -69,6 +72,8 @@ export default class CardTable extends Component {
       })
     })
   }
+
+  mounted = false
 
   hiddenStyle = {
     float: 'left',
@@ -85,24 +90,34 @@ export default class CardTable extends Component {
     clip: 'rect(0 0 0 0)',
   }
 
+  tableNodes = {}
+
+  get cardsPerDeck () {
+    return this.props.cardsPerDeck || this.props.rows.length
+  }
+
+  get rowsPerTable () {
+    return this.props.rowsPerTable || this.props.rows.length
+  }
+
   get deck () {
-    const { cardsPerDeck, classNames, headers } = this.props
+    const { classNames, headers } = this.props
     const {
       items: decks,
       itemIndex: deckIndex,
       minIndex,
       nextIndex,
       prevIndex,
-    } = this.itemsProperties(cardsPerDeck)
+    } = this.itemsProperties(this.cardsPerDeck)
     const deckRows = decks[deckIndex]
 
     return (
       <div>
         <Deck classNames={classNames} headers={headers} rows={deckRows} />
         <div className={navigation}>
-          {this.backButton(prevIndex < minIndex, this.prevPage(cardsPerDeck))}
+          {this.backButton(prevIndex < minIndex, this.prevPage(this.cardsPerDeck))}
           <div>{`${nextIndex}/${decks.length}`}</div>
-          {this.nextButton(nextIndex >= decks.length, this.nextPage(cardsPerDeck))}
+          {this.nextButton(nextIndex >= decks.length, this.nextPage(this.cardsPerDeck))}
         </div>
       </div>
     )
@@ -124,14 +139,14 @@ export default class CardTable extends Component {
   }
 
   get tables () {
-    const { classNames: { tableClass }, headers, rowsPerTable } = this.props
+    const { classNames: { tableClass }, headers } = this.props
     const {
       items: tables,
       itemIndex: tableIndex,
       minIndex,
       nextIndex,
       prevIndex,
-    } = this.itemsProperties(rowsPerTable)
+    } = this.itemsProperties(this.rowsPerTable)
 
     return (
       <div>
@@ -147,9 +162,9 @@ export default class CardTable extends Component {
           </div>
         ))}
         <div className={navigation}>
-          {this.backButton(prevIndex < minIndex, this.prevPage(rowsPerTable))}
+          {this.backButton(prevIndex < minIndex, this.prevPage(this.rowsPerTable))}
           <div>{`${nextIndex}/${tables.length}`}</div>
-          {this.nextButton(nextIndex >= tables.length, this.nextPage(rowsPerTable))}
+          {this.nextButton(nextIndex >= tables.length, this.nextPage(this.rowsPerTable))}
         </div>
       </div>
     )
@@ -163,6 +178,9 @@ export default class CardTable extends Component {
     })
 
   handleWindowResize = () => new Promise((resolve) => {
+    if (!this.mounted) {
+      throw new Error('Not mounted')
+    }
     this.setState(
       {
         tableIsTooWide: this.tableIsTooWide,
@@ -218,18 +236,22 @@ export default class CardTable extends Component {
   }
 
   updateTableNodeRef = (ref) => {
-    this.tableNodes = {
-      ...this.tableNodes,
-      [ref.id]: ref,
+    if (ref) {
+      this.tableNodes = {
+        ...this.tableNodes,
+        [ref.id]: ref,
+      }
     }
+  }
+
+  updateContainerNodeRef = (ref) => {
+    this.containerNode = ref
   }
 
   render () {
     return (
       <div
-        ref={(ref) => {
-          this.containerNode = ref
-        }}
+        ref={this.updateContainerNodeRef}
         style={this.state.shouldRender ? null : this.hiddenStyle}
       >
         {this.state.tableIsTooWide ? this.deck : null}
