@@ -279,7 +279,7 @@ export default class CardTable extends Component {
   render() {
     return (
       <div
-        ref={this.updateTableNodeRef}
+        ref={this.updateContainerNodeRef}
         style={this.state.shouldRender ? null : this.hiddenStyle}
       >
         {this.state.tableIsTooWide ? this.deck : null}
