@@ -1,5 +1,6 @@
 {
   "plugins": [
+    "lodash",
     ["transform-runtime", {
       "helpers": false,
       "polyfill": false,
@@ -17,6 +18,7 @@
   "env": {
     "es6": {
       "plugins": [
+        "lodash",
         "transform-runtime",
         ["module-resolver", {
             "root": ["./src"]

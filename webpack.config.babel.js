@@ -1,11 +1,19 @@
 const resolve = require('path').resolve
 
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const Visualizer = require('webpack-visualizer-plugin')
 
 const PATHS = {
   build: resolve(__dirname, 'dist'),
   nodeModules: resolve(__dirname, 'node_modules'),
   src: resolve(__dirname, 'src'),
+}
+
+const propTypesExternal = {
+  root: 'PropTypes',
+  commonjs2: 'prop-types',
+  commonjs: 'prop-types',
+  amd: 'prop-types',
 }
 
 const reactExternal = {
@@ -82,8 +90,9 @@ module.exports = {
   },
   devtool: 'source-map',
   context: PATHS.src,
-  plugins: [new Visualizer()],
+  plugins: [new LodashModuleReplacementPlugin(), new Visualizer()],
   externals: {
+    'prop-types': propTypesExternal,
     react: reactExternal,
   },
 }
