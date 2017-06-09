@@ -1,5 +1,7 @@
 const resolve = require('path').resolve
 
+const Visualizer = require('webpack-visualizer-plugin')
+
 const PATHS = {
   build: resolve(__dirname, 'dist'),
   nodeModules: resolve(__dirname, 'node_modules'),
@@ -59,9 +61,7 @@ module.exports = {
       },
       {
         test: /\.jsx?$/,
-        include: [
-          PATHS.src,
-        ],
+        include: [PATHS.src],
         use: [
           {
             loader: 'babel-loader',
@@ -71,10 +71,7 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: [
-      PATHS.nodeModules,
-      PATHS.src,
-    ],
+    modules: [PATHS.nodeModules, PATHS.src],
     extensions: ['.js', '.jsx', '.scss'],
     enforceExtension: false,
   },
@@ -85,6 +82,7 @@ module.exports = {
   },
   devtool: 'source-map',
   context: PATHS.src,
+  plugins: [new Visualizer()],
   externals: {
     react: reactExternal,
   },

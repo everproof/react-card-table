@@ -1,4 +1,6 @@
 rules:
+  indentation:
+    - 0
   mixins-before-declarations:
     - 1
     -
@@ -17,3 +19,5 @@ rules:
   -
     order: concentric
     ignore-custom-properties: true
+  single-line-per-selector:
+    - 0
