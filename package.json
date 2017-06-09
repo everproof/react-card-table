@@ -1,6 +1,6 @@
 {
   "name": "react-card-table",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A react table component that collapses into a deck of cards when the table no longer fits on the screen",
   "main": "dist/index.js",
   "scripts": {
