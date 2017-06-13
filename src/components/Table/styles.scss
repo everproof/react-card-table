@@ -44,8 +44,7 @@
     }
   }
 
-  td,
-  th {
+  td, th {
     @extend %row;
     border-left: $border;
 

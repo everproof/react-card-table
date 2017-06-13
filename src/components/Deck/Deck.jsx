@@ -11,7 +11,7 @@ const defaultClassNames = {
   deckClass: deck,
 }
 
-export default function Deck ({
+export default function Deck({
   classNames: {
     cardClass = defaultClassNames.cardClass,
     cardLabelClass = defaultClassNames.cardLabelClass,
@@ -24,18 +24,20 @@ export default function Deck ({
 }) {
   return (
     <div className={deckClass}>
-      {rows.map(({ data, id, onClick }) => (
-        <div className={cardClass} key={id} onClick={onClick} role='row'>
+      {rows.map(({ data, id, onClick }) =>
+        <div className={cardClass} key={id} onClick={onClick} role="row">
           <div>
             {headers.map(({ key, title }) =>
-              <div className={cardLabelClass} key={key}>{title}</div>)}
+              <div className={cardLabelClass} key={key}>{title}</div>,
+            )}
           </div>
           <div className={cardValuesClass}>
             {Object.entries(data).map(([key, value]) =>
-              <div className={cardValueClass} key={key + value}>{value}</div>)}
+              <div className={cardValueClass} key={key + value}>{value}</div>,
+            )}
           </div>
-        </div>
-      ))}
+        </div>,
+      )}
     </div>
   )
 }
@@ -54,13 +56,17 @@ Deck.propTypes = {
     cardValuesClass: string,
     deckClass: string,
   }),
-  headers: arrayOf(shape({
-    key: string.isRequired,
-    title: string.isRequired,
-  })).isRequired,
-  rows: arrayOf(shape({
-    data: shape().isRequired,
-    id: string.isRequired,
-    onClick: func,
-  })).isRequired,
+  headers: arrayOf(
+    shape({
+      key: string.isRequired,
+      title: string.isRequired,
+    }),
+  ).isRequired,
+  rows: arrayOf(
+    shape({
+      data: shape().isRequired,
+      id: string.isRequired,
+      onClick: func,
+    }),
+  ).isRequired,
 }
